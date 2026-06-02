@@ -11,9 +11,12 @@
 
     <style>
         body {
-            background: #f4f8ff;
+            background: linear-gradient(135deg,
+                    #f4f8ff,
+                    #eef5ff);
             min-height: 100vh;
             display: flex;
+            padding: 0px;
             align-items: center;
             justify-content: center;
             font-family: Segoe UI, sans-serif;
@@ -21,11 +24,58 @@
 
         .main-card {
             width: 100%;
-            max-width: 900px;
+            max-width: 1100px;
             background: white;
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 15px 40px rgba(13, 110, 253, .15);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, .04),
+                0 20px 60px rgba(13, 110, 253, .08);
+        }
+
+        @media (max-width:768px) {
+
+            .main-card {
+                padding: 16px;
+                border-radius: 18px;
+            }
+
+            body {
+                padding: 8px;
+            }
+
+            .logo {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .output-box {
+                min-height: 180px;
+            }
+
+            #healthChatMessages {
+                height: 55vh !important;
+            }
+
+        }
+
+        .form-control,
+        .form-select {
+
+            transition: .25s ease;
+
+        }
+
+        .form-control:hover,
+        .form-select:hover {
+
+            border-color: #0d6efd;
+
         }
 
         .logo {
@@ -72,7 +122,9 @@
         }
 
         .output-box {
-            min-height: 220px;
+            min-height: 260px;
+            overflow-y: auto;
+            background: white;
             border-radius: 20px;
             background: #f8fbff;
             border: 2px solid #d8e7ff;
@@ -93,7 +145,8 @@
             padding: 12px;
             border-radius: 15px;
             margin: 10px 0;
-            margin-left: 60px;
+            max-width: 80%;
+            margin-left: auto;
             text-align: right;
         }
 
@@ -102,8 +155,25 @@
             color: #212529;
             padding: 12px;
             border-radius: 15px;
+            max-width: 80%;
             margin: 10px 0;
             margin-right: 60px;
+        }
+
+        .tool-nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 32px;
+            scrollbar-width: none;
+        }
+
+        .tool-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tool-nav .btn {
+            flex-shrink: 0;
         }
     </style>
 
@@ -113,7 +183,7 @@
 
     <div class="container">
         <div class="main-card">
-            <div class="d-flex justify-content-center mb-4 gap-2">
+            <div class="d-flex justify-content-center mb-4 gap-2 tool-nav">
 
                 <button id="emailTab" class="btn btn-primary" onclick="showEmail()">
                     Email Rewriter
@@ -517,7 +587,7 @@
             document.getElementById("healthTab").className =
                 "btn btn-warning";
         }
-       
+
         async function rewriteEmail() {
 
             const message =
