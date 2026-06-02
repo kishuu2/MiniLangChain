@@ -1,828 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tools Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <title>Email Rewriter AI</title>
+    :root {
+      --bg: #202020;
+      --surface: #14171f;
+      --surface2: #1a1e28;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f2f7;
+      --muted: #7a7f8e;
+      --accent-email: #4f8cff;
+      --accent-doc: #a78bfa;
+      --accent-trans: #34d399;
+      --accent-health: #fb923c;
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
 
-    <style>
-        body {
-            background: linear-gradient(135deg,
-                    #f4f8ff,
-                    #eef5ff);
-            min-height: 100vh;
-            display: flex;
-            padding: 0px;
-            align-items: center;
-            justify-content: center;
-            font-family: Segoe UI, sans-serif;
-        }
+    /* ── Header ── */
+    .app-header {
+      width: 100%;
+      max-width: 860px;
+      text-align: center;
+      margin-bottom: 32px;
+      animation: fadeDown .5s ease both;
+    }
+    .app-header h1 {
+      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(120deg, #4f8cff 0%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .app-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
 
-        .main-card {
-            width: 100%;
-            max-width: 1100px;
-            background: white;
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow:
-                0 10px 30px rgba(0, 0, 0, .04),
-                0 20px 60px rgba(13, 110, 253, .08);
-        }
+    /* ── Tab Nav ── */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px;
+      margin-bottom: 28px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      max-width: 860px;
+      width: 100%;
+      animation: fadeDown .5s .1s ease both;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
 
-        @media (max-width:768px) {
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 20px;
+      border: none;
+      border-radius: 99px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .22s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tab-btn .tab-icon { font-size: 1rem; }
+    .tab-btn:hover { color: var(--text); background: var(--surface2); }
+    .tab-btn.active {
+      color: #0d0f14;
+      background: var(--tab-color, var(--accent-email));
+    }
+    #emailTab.active   { --tab-color: var(--accent-email); }
+    #docTab.active     { --tab-color: var(--accent-doc); }
+    #transTab.active   { --tab-color: var(--accent-trans); }
+    #healthTab.active  { --tab-color: var(--accent-health); }
 
-            .main-card {
-                padding: 16px;
-                border-radius: 18px;
-            }
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 860px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      animation: fadeUp .35s ease both;
+    }
 
-            body {
-                padding: 8px;
-            }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:none; } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(14px);  } to { opacity:1; transform:none; } }
 
-            .logo {
-                width: 55px;
-                height: 55px;
-                font-size: 22px;
-            }
+    /* ── Section Header ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .section-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .icon-email  { background: rgba(79,140,255,.15); }
+    .icon-doc    { background: rgba(167,139,250,.15); }
+    .icon-trans  { background: rgba(52,211,153,.15);  }
+    .icon-health { background: rgba(251,146,60,.15);  }
 
-            h2 {
-                font-size: 1.4rem;
-            }
+    .section-head h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .section-head p { color: var(--muted); font-size: 0.83rem; margin-top: 2px; }
 
-            .output-box {
-                min-height: 180px;
-            }
+    /* ── Form Elements ── */
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 8px;
+    }
 
-            #healthChatMessages {
-                height: 55vh !important;
-            }
+    textarea, input[type="text"], select, input[type="file"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color .2s;
+      resize: none;
+      appearance: none;
+    }
+    textarea:focus, input[type="text"]:focus, select:focus {
+      border-color: var(--focus-color, var(--accent-email));
+    }
+    select option { background: var(--surface2); }
 
-        }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
 
-        .form-control,
-        .form-select {
+    .field { display: flex; flex-direction: column; }
 
-            transition: .25s ease;
+    /* ── Buttons ── */
+    .btn-primary {
+      padding: 13px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: .3px;
+    }
+    .btn-email  { background: var(--accent-email);  color: #fff; }
+    .btn-doc    { background: var(--accent-doc);    color: #fff; }
+    .btn-trans  { background: var(--accent-trans);  color: #0d0f14; }
+    .btn-health { background: var(--accent-health); color: #fff; }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
 
-        }
+    /* ── Output Box ── */
+    .output-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      min-height: 160px;
+    }
+    .output-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .output-text {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+      white-space: pre-wrap;
+    }
+    .output-text.has-content { color: var(--text); }
 
-        .form-control:hover,
-        .form-select:hover {
+    /* ── Loader ── */
+    .loader {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-            border-color: #0d6efd;
+    /* ── Email Section ── */
+    #emailSection .two-col { align-items: start; }
 
-        }
+    /* ── Doc Section ── */
+    .doc-upload-area {
+      border: 2px dashed rgba(167,139,250,.3);
+      border-radius: var(--radius-sm);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+    .doc-upload-area:hover { border-color: var(--accent-doc); background: rgba(167,139,250,.04); }
+    .doc-upload-area input { position: absolute; inset:0; opacity:0; cursor:pointer; }
+    .doc-upload-area p { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+    .doc-upload-area .upload-icon { font-size: 2rem; }
+    #fileNameDisplay { font-size: 0.8rem; color: var(--accent-doc); margin-top: 6px; min-height: 18px; }
 
-        .logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: #0d6efd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 28px;
-            margin: auto;
-        }
+    /* ── Health Chat ── */
+    .chat-area {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      height: 360px;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+    .chat-area::-webkit-scrollbar { width: 4px; }
+    .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-        .heading {
-            color: #0d6efd;
-            font-weight: 700;
-        }
+    .msg { max-width: 80%; padding: 11px 15px; border-radius: 14px; font-size: 0.88rem; line-height: 1.5; }
+    .msg-bot { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; }
+    .msg-user {
+      background: var(--accent-health);
+      color: #fff;
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+    }
 
-        .form-control,
-        .form-select {
-            border: 2px solid #d8e7ff;
-            border-radius: 15px;
-            padding: 14px;
-        }
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .chat-input-row input { border-radius: var(--radius-sm); flex: 1; }
+    .chat-send-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent-health);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .chat-send-btn:hover { opacity: .85; }
 
-        .form-control:focus,
-        .form-select:focus {
-            box-shadow: none;
-            border-color: #0d6efd;
-        }
+    .disclaimer {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(251,146,60,.08);
+      border: 1px solid rgba(251,146,60,.2);
+      font-size: 0.78rem;
+      color: var(--accent-health);
+    }
 
-        .btn-custom {
-            background: #0d6efd;
-            border: none;
-            border-radius: 15px;
-            padding: 14px;
-            font-weight: 600;
-        }
+    /* ── Translator ── */
+    .lang-swap-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .lang-swap-row .field { flex: 1; }
+    .swap-btn {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 0;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .swap-btn:hover { color: var(--accent-trans); border-color: var(--accent-trans); }
 
-        .btn-custom:hover {
-            background: #0b5ed7;
-        }
-
-        .output-box {
-            min-height: 260px;
-            overflow-y: auto;
-            background: white;
-            border-radius: 20px;
-            background: #f8fbff;
-            border: 2px solid #d8e7ff;
-            padding: 20px;
-        }
-
-        .spinner-border {
-            display: none;
-        }
-
-        .result-text {
-            white-space: pre-wrap;
-        }
-
-        .user-message {
-            background: #fd7e14;
-            color: white;
-            padding: 12px;
-            border-radius: 15px;
-            margin: 10px 0;
-            max-width: 80%;
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .bot-message {
-            background: #f1f1f1;
-            color: #212529;
-            padding: 12px;
-            border-radius: 15px;
-            max-width: 80%;
-            margin: 10px 0;
-            margin-right: 60px;
-        }
-
-        .tool-nav {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 32px;
-            scrollbar-width: none;
-        }
-
-        .tool-nav::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tool-nav .btn {
-            flex-shrink: 0;
-        }
-    </style>
-
+    /* ── Utility ── */
+    .mt12 { margin-top: 12px; }
+    .mt16 { margin-top: 16px; }
+    .mt20 { margin-top: 20px; }
+    .section { display: none; }
+    .section.active { display: block; }
+  </style>
 </head>
-
 <body>
 
-    <div class="container">
-        <div class="main-card">
-            <div class="d-flex justify-content-center mb-4 gap-2 tool-nav">
-
-                <button id="emailTab" class="btn btn-primary" onclick="showEmail()">
-                    Email Rewriter
-                </button>
-
-                <button id="docTab" class="btn btn-outline-secondary" onclick="showDocument()">
-                    Document Summary
-                </button>
-                <button id="translatorTab" class="btn btn-outline-success" onclick="showTranslator()">
-                    Translator
-                </button>
-                <button id="healthTab" class="btn btn-outline-warning" onclick="showHealth()">
-
-                    Health Advisor
-
-                </button>
-            </div>
-            <div id="emailSection">
-                <div class="text-center mb-4">
-                    <div class="logo">
-                        ✉
-                    </div>
-
-                    <h2 class="heading mt-3">
-                        AI Email Rewriter
-                    </h2>
-
-                    <p class="text-muted">
-                        Transform your emails into any tone instantly
-                    </p>
-                </div>
-
-                <div class="row g-4">
-
-                    <div class="col-md-6">
-
-                        <label class="fw-bold mb-2">
-                            Email Content
-                        </label>
-
-                        <textarea id="message" class="form-control" rows="10"
-                            placeholder="Type your email here..."></textarea>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <label class="fw-bold mb-2">
-                            Select Tone
-                        </label>
-
-                        <select id="tone" class="form-select mb-3">
-                            <option>Formal</option>
-                            <option>Professional</option>
-                            <option>Friendly</option>
-                            <option>Informal</option>
-                            <option>Polite</option>
-                            <option>Corporate</option>
-                        </select>
-
-                        <button class="btn btn-primary btn-custom w-100" onclick="rewriteEmail()">
-                            Rewrite Email
-                        </button>
-
-                        <div class="text-center mt-3">
-                            <div class="spinner-border text-primary" id="loader" role="status">
-                            </div>
-                        </div>
-
-                        <div class="output-box mt-4">
-
-                            <h5 class="text-primary mb-3">
-                                Rewritten Result
-                            </h5>
-
-                            <div id="result" class="result-text text-muted">
-                                Your rewritten email will appear here...
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="documentSection" style="display:none;">
-
-                <div class="text-center mb-4">
-
-                    <div style="
-                width:70px;
-                height:70px;
-                border-radius:50%;
-                background:#212529;
-                color:white;
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                margin:auto;
-                font-size:28px;">
-                        📄
-                    </div>
-
-                    <h2 class="mt-3 text-dark fw-bold">
-                        Document Summary
-                    </h2>
-
-                    <p class="text-muted">
-                        Upload PDF and generate AI summary
-                    </p>
-
-                </div>
-
-                <div class="p-4 rounded-4" style="
-            background:#1e1e1e;
-            color:white;">
-
-                    <label class="mb-2">
-                        Select PDF File
-                    </label>
-
-                    <input type="file" id="pdfFile" accept=".pdf" class="form-control mb-3">
-
-                    <button class="btn btn-light w-100" onclick="summarizeDocument()">
-                        Generate Summary
-                    </button>
-
-                    <div class="mt-4 p-3 rounded" style="
-                background:#2c2c2c;
-                min-height:220px;">
-
-                        <h5>
-                            Summary
-                        </h5>
-
-                        <div id="summaryResult">
-                            Your summary will appear here...
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="translatorSection" style="display:none;">
-
-                <div class="text-center mb-4">
-
-                    <div style="
-            width:70px;
-            height:70px;
-            border-radius:50%;
-            background:#198754;
-            color:white;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin:auto;
-            font-size:28px;">
-
-                        🌍
-
-                    </div>
-
-                    <h2 class="mt-3 fw-bold text-success">
-                        AI Translator
-                    </h2>
-
-                    <p class="text-muted">
-                        Translate between any languages instantly
-                    </p>
-
-                </div>
-
-                <div class="p-4 rounded-4 border">
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-
-                            <label class="fw-bold mb-2">
-                                From
-                            </label>
-
-                            <select id="sourceLanguage" class="form-select">
-
-                                <option>English</option>
-                                <option>Hindi</option>
-                                <option>Gujarati</option>
-                                <option>French</option>
-                                <option>German</option>
-                                <option>Spanish</option>
-                                <option>Japanese</option>
-                                <option>Chinese</option>
-                                <option>Arabic</option>
-
-                            </select>
-
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <label class="fw-bold mb-2">
-                                To
-                            </label>
-
-                            <select id="targetLanguage" class="form-select">
-
-                                <option>Hindi</option>
-                                <option>English</option>
-                                <option>Gujarati</option>
-                                <option>French</option>
-                                <option>German</option>
-                                <option>Spanish</option>
-                                <option>Japanese</option>
-                                <option>Chinese</option>
-                                <option>Arabic</option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                    <textarea id="translatorInput" class="form-control mt-3" rows="8" placeholder="Enter text here...">
-        </textarea>
-
-                    <button class="btn btn-success w-100 mt-3" onclick="translateText()">
-
-                        Translate
-
-                    </button>
-
-                    <div class="output-box mt-4">
-
-                        <h5 class="text-success">
-                            Translation Result
-                        </h5>
-
-                        <div id="translatorResult">
-
-                            Translation will appear here...
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="healthSection" style="display:none;">
-
-                <div class="text-center mb-4">
-
-                    <div style="
-            width:70px;
-            height:70px;
-            border-radius:50%;
-            background:#fd7e14;
-            color:white;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            margin:auto;
-            font-size:28px;">
-
-                        🩺
-
-                    </div>
-
-                    <h2 class="mt-3 fw-bold text-warning">
-                        AI Health Advisor
-                    </h2>
-
-                    <p class="text-muted">
-                        General wellness guidance with conversation memory
-                    </p>
-
-                </div>
-
-                <div style="
-            background:#fff8f0;
-            border:2px solid #fd7e14;
-            border-radius:20px;
-            padding:15px;">
-
-                    <div id="healthChatMessages" style="
-                height:450px;
-                overflow-y:auto;
-                background:white;
-                border-radius:15px;
-                padding:15px;">
-
-                        <div class="bot-message">
-                            Hello 👋 Describe your symptoms and I'll provide general health guidance.
-                        </div>
-
-                    </div>
-
-                    <div class="input-group mt-3">
-
-                        <input type="text" id="symptomsInput" class="form-control"
-                            placeholder="Describe your symptoms...">
-
-                        <button class="btn btn-warning" onclick="sendHealthMessage()">
-
-                            Send
-
-                        </button>
-
-                    </div>
-
-                    <div class="alert alert-warning mt-3 mb-0">
-                        This AI provides general health information only and does not diagnose medical conditions.
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+  <header class="app-header">
+    <h1>AI Tools Suite</h1>
+    <p>Email · Documents · Translation · Health — all in one place</p>
+  </header>
+
+  <!-- Tab Nav -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" id="emailTab" onclick="switchTab('email')">
+      <span class="tab-icon"></span> Email Rewriter
+    </button>
+    <button class="tab-btn" id="docTab" onclick="switchTab('doc')">
+      <span class="tab-icon"></span> Doc Summary
+    </button>
+    <button class="tab-btn" id="transTab" onclick="switchTab('trans')">
+      <span class="tab-icon"></span> Translator
+    </button>
+    <button class="tab-btn" id="healthTab" onclick="switchTab('health')">
+      <span class="tab-icon"></span> Health Advisor
+    </button>
+  </nav>
+
+  <!-- ══ EMAIL ══ -->
+  <div class="card section active" id="emailSection">
+    <div class="section-head">
+      <div class="section-icon icon-email"><img src="{{url_for('static', filename='email.webp')}}" alt="email" width="50px"></div>
+      <div>
+        <h2 style="color:var(--accent-email)">Email Rewriter</h2>
+        <p>Transform any email into the perfect tone instantly</p>
+      </div>
     </div>
 
-    <script>
-        function showEmail() {
-
-            document.getElementById("emailSection").style.display = "block";
-            document.getElementById("documentSection").style.display = "none";
-            document.getElementById("healthSection").style.display = "none";
-
-            document.getElementById("emailTab")
-                .className = "btn btn-primary";
-
-            document.getElementById("docTab")
-                .className = "btn btn-outline-secondary";
-            document.getElementById("translatorSection").style.display =
-                "none";
-
-            document.getElementById("translatorTab").className =
-                "btn btn-outline-success";
-        }
-
-        function showDocument() {
-
-            document.getElementById("emailSection").style.display = "none";
-            document.getElementById("healthSection").style.display = "none";
-            document.getElementById("documentSection").style.display = "block";
-
-            document.getElementById("docTab")
-                .className = "btn btn-dark";
-
-            document.getElementById("emailTab")
-                .className = "btn btn-outline-primary";
-            document.getElementById("translatorSection").style.display =
-                "none";
-
-            document.getElementById("translatorTab").className =
-                "btn btn-outline-success";
-        }
-        function showTranslator() {
-
-            document.getElementById("emailSection").style.display =
-                "none";
-
-            document.getElementById("documentSection").style.display =
-                "none";
-            document.getElementById("healthSection").style.display = "none";
-
-            document.getElementById("translatorSection").style.display =
-                "block";
-
-            document.getElementById("emailTab").className =
-                "btn btn-outline-primary";
-
-            document.getElementById("docTab").className =
-                "btn btn-outline-secondary";
-
-            document.getElementById("translatorTab").className =
-                "btn btn-success";
-        }
-        function showHealth() {
-
-            document.getElementById("emailSection").style.display = "none";
-            document.getElementById("documentSection").style.display = "none";
-            document.getElementById("translatorSection").style.display = "none";
-
-            document.getElementById("healthSection").style.display = "block";
-
-            document.getElementById("emailTab").className =
-                "btn btn-outline-primary";
-
-            document.getElementById("docTab").className =
-                "btn btn-outline-secondary";
-
-            document.getElementById("translatorTab").className =
-                "btn btn-outline-success";
-
-            document.getElementById("healthTab").className =
-                "btn btn-warning";
-        }
-
-        async function rewriteEmail() {
-
-            const message =
-                document.getElementById("message").value;
-
-            const tone =
-                document.getElementById("tone").value;
-
-            const resultBox =
-                document.getElementById("result");
-
-            const loader =
-                document.getElementById("loader");
-
-            if (!message) {
-                alert("Please enter email content");
-                return;
-            }
-
-            loader.style.display = "inline-block";
-
-            resultBox.innerHTML = "Generating...";
-
-            try {
-
-                const response =
-                    await fetch("/rewrite", {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            message,
-                            tone
-                        })
-
-                    });
-
-                const data =
-                    await response.json();
-
-                resultBox.innerHTML =
-                    data.response;
-
-            }
-            catch (error) {
-
-                resultBox.innerHTML =
-                    "Something went wrong.";
-
-                console.log(error);
-            }
-
-            loader.style.display = "none";
-        }
-
-        async function summarizeDocument() {
-
-            const file =
-                document.getElementById("pdfFile").files[0];
-
-            if (!file) {
-                alert("Please select a PDF");
-                return;
-            }
-
-            const formData =
-                new FormData();
-
-            formData.append("file", file);
-
-            const result =
-                document.getElementById("summaryResult");
-
-            result.innerHTML = "Generating Summary...";
-
-            try {
-
-                const response =
-                    await fetch("/summarize", {
-                        method: "POST",
-                        body: formData
-                    });
-
-                const data =
-                    await response.json();
-
-                result.innerHTML =
-                    data.summary;
-
-            }
-            catch (error) {
-
-                result.innerHTML =
-                    "Something went wrong.";
-
-                console.log(error);
-            }
-        }
-
-        async function translateText() {
-
-            const text =
-                document.getElementById(
-                    "translatorInput"
-                ).value;
-
-            const source_language =
-                document.getElementById(
-                    "sourceLanguage"
-                ).value;
-
-            const target_language =
-                document.getElementById(
-                    "targetLanguage"
-                ).value;
-
-            const result =
-                document.getElementById(
-                    "translatorResult"
-                );
-
-            result.innerHTML =
-                "Translating...";
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/translate",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                text,
-                                source_language,
-                                target_language
-                            })
-                        }
-                    );
-
-                const data =
-                    await response.json();
-
-                result.innerHTML =
-                    data.translation;
-
-            } catch (error) {
-
-                result.innerHTML =
-                    "Translation failed.";
-            }
-        }
-
-        async function sendHealthMessage() {
-
-            const input =
-                document.getElementById("symptomsInput");
-
-            const symptoms =
-                input.value.trim();
-
-            if (!symptoms) {
-                return;
-            }
-
-            const chat =
-                document.getElementById(
-                    "healthChatMessages"
-                );
-
-            chat.innerHTML += `
-        <div class="user-message">
-            ${symptoms}
+    <div class="two-col">
+      <div class="field">
+        <label>Your Email</label>
+        <textarea id="message" rows="11" placeholder="Paste your email here..."></textarea>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="field">
+          <label>Tone</label>
+          <select id="tone" style="--focus-color:var(--accent-email)">
+            <option>Formal</option>
+            <option>Professional</option>
+            <option>Friendly</option>
+            <option>Informal</option>
+            <option>Polite</option>
+            <option>Corporate</option>
+          </select>
         </div>
-    `;
 
-            input.value = "";
+        <button class="btn-primary btn-email" onclick="rewriteEmail()">
+          <span id="emailBtnText">Rewrite Email</span>
+          <div class="loader" id="emailLoader"></div>
+        </button>
 
-            chat.scrollTop =
-                chat.scrollHeight;
+        <div class="output-box">
+          <div class="output-label">Result</div>
+          <div id="emailResult" class="output-text">Your rewritten email will appear here…</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            try {
+  <!-- ══ DOCUMENT ══ -->
+  <div class="card section" id="docSection">
+    <div class="section-head">
+      <div class="section-icon icon-doc"><img src="{{url_for('static', filename='document.webp')}}" alt="document" width="50px"></div>
+      <div>
+        <h2 style="color:var(--accent-doc)">Document Summary</h2>
+        <p>Upload a PDF and get a concise AI-powered summary</p>
+      </div>
+    </div>
 
-                const response =
-                    await fetch(
-                        "/health",
-                        {
-                            method: "POST",
+    <div class="doc-upload-area" id="uploadArea">
+      <input type="file" id="pdfFile" accept=".pdf" onchange="handleFileSelect()" />
+      <div class="upload-icon">📂</div>
+      <p>Click or drag & drop your PDF here</p>
+      <div id="fileNameDisplay"></div>
+    </div>
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+    <button class="btn-primary btn-doc mt20" onclick="summarizeDocument()" style="width:100%">
+      <span id="docBtnText">Generate Summary</span>
+      <div class="loader" id="docLoader"></div>
+    </button>
 
-                            body: JSON.stringify({
-                                symptoms
-                            })
-                        }
-                    );
+    <div class="output-box mt16">
+      <div class="output-label">Summary</div>
+      <div id="summaryResult" class="output-text">Your summary will appear here…</div>
+    </div>
+  </div>
 
-                const data =
-                    await response.json();
+  <!-- ══ TRANSLATOR ══ -->
+  <div class="card section" id="transSection">
+    <div class="section-head">
+      <div class="section-icon icon-trans"><img src="{{url_for('static', filename='translation.webp')}}" alt="translator" width="50px"></div>
+      <div>
+        <h2 style="color:var(--accent-trans)">AI Translator</h2>
+        <p>Translate between any languages instantly</p>
+      </div>
+    </div>
 
-                chat.innerHTML += `
-            <div class="bot-message">
-                ${data.advice}
-            </div>
-        `;
+    <div class="lang-swap-row">
+      <div class="field">
+        <label>From</label>
+        <select id="sourceLanguage" style="--focus-color:var(--accent-trans)">
+          <option>English</option><option>Hindi</option><option>Gujarati</option>
+          <option>French</option><option>German</option><option>Spanish</option>
+          <option>Japanese</option><option>Chinese</option><option>Arabic</option>
+        </select>
+      </div>
+      <button class="swap-btn" onclick="swapLanguages()" title="Swap languages">⇄</button>
+      <div class="field">
+        <label>To</label>
+        <select id="targetLanguage" style="--focus-color:var(--accent-trans)">
+          <option>Hindi</option><option>English</option><option>Gujarati</option>
+          <option>French</option><option>German</option><option>Spanish</option>
+          <option>Japanese</option><option>Chinese</option><option>Arabic</option>
+        </select>
+      </div>
+    </div>
 
-                chat.scrollTop =
-                    chat.scrollHeight;
+    <div class="field mt16">
+      <label>Text to Translate</label>
+      <textarea id="translatorInput" rows="7" placeholder="Enter text here…" style="--focus-color:var(--accent-trans)"></textarea>
+    </div>
 
-            }
-            catch (error) {
+    <button class="btn-primary btn-trans mt16" onclick="translateText()" style="width:100%">
+      <span id="transBtnText">Translate</span>
+      <div class="loader" id="transLoader"></div>
+    </button>
 
-                chat.innerHTML += `
-            <div class="bot-message">
-                Something went wrong.
-            </div>
-        `;
+    <div class="output-box mt16">
+      <div class="output-label">Translation</div>
+      <div id="translatorResult" class="output-text">Translation will appear here…</div>
+    </div>
+  </div>
 
-                console.log(error);
-            }
-        }
-    </script>
+  <!-- ══ HEALTH ══ -->
+  <div class="card section" id="healthSection">
+    <div class="section-head">
+      <div class="section-icon icon-health"><img src="{{url_for('static', filename='heartbeat.webp')}}" alt="health" width="50px"></div>
+      <div>
+        <h2 style="color:var(--accent-health)">Health Advisor</h2>
+        <p>General wellness guidance — not a substitute for a doctor</p>
+      </div>
+    </div>
 
+    <div class="chat-area" id="healthChat">
+      <div class="msg msg-bot">👋 Hello! Describe your symptoms and I'll provide general health guidance.</div>
+    </div>
+
+    <div class="chat-input-row">
+      <input type="text" id="symptomsInput" placeholder="Describe your symptoms…"
+        onkeydown="if(event.key==='Enter') sendHealthMessage()"
+        style="--focus-color:var(--accent-health)" />
+      <button class="chat-send-btn" onclick="sendHealthMessage()">Send</button>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ This AI provides general health information only and does not diagnose medical conditions. Always consult a qualified doctor.
+    </div>
+  </div>
+
+  <script>
+    // ── Tab Switching ──
+    const tabs = { email: 'emailSection', doc: 'docSection', trans: 'transSection', health: 'healthSection' };
+    const tabBtns = { email: 'emailTab', doc: 'docTab', trans: 'transTab', health: 'healthTab' };
+
+    function switchTab(tab) {
+      Object.values(tabs).forEach(id => document.getElementById(id).classList.remove('active'));
+      Object.values(tabBtns).forEach(id => document.getElementById(id).classList.remove('active'));
+      document.getElementById(tabs[tab]).classList.add('active');
+      document.getElementById(tabBtns[tab]).classList.add('active');
+    }
+
+    // ── Loader helpers ──
+    function setLoading(btnTextId, loaderId, loading) {
+      document.getElementById(btnTextId).style.display = loading ? 'none' : '';
+      document.getElementById(loaderId).style.display  = loading ? 'inline-block' : 'none';
+    }
+
+    function setResult(el, text) {
+      el.textContent = text;
+      el.classList.toggle('has-content', true);
+    }
+
+    // ── Email ──
+    async function rewriteEmail() {
+      const message = document.getElementById('message').value.trim();
+      const tone    = document.getElementById('tone').value;
+      const result  = document.getElementById('emailResult');
+      if (!message) { alert('Please enter email content'); return; }
+      setLoading('emailBtnText', 'emailLoader', true);
+      result.textContent = 'Rewriting…';
+      try {
+        const res  = await fetch('/rewrite', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message,tone}) });
+        const data = await res.json();
+        setResult(result, data.response);
+      } catch { result.textContent = 'Something went wrong. Please try again.'; }
+      setLoading('emailBtnText', 'emailLoader', false);
+    }
+
+    // ── Document ──
+    function handleFileSelect() {
+      const file = document.getElementById('pdfFile').files[0];
+      document.getElementById('fileNameDisplay').textContent = file ? file.name : '';
+    }
+
+    async function summarizeDocument() {
+      const file = document.getElementById('pdfFile').files[0];
+      if (!file) { alert('Please select a PDF first'); return; }
+      const result = document.getElementById('summaryResult');
+      setLoading('docBtnText', 'docLoader', true);
+      result.textContent = 'Generating summary…';
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const res  = await fetch('/summarize', { method:'POST', body:formData });
+        const data = await res.json();
+        setResult(result, data.summary);
+      } catch { result.textContent = 'Something went wrong. Please try again.'; }
+      setLoading('docBtnText', 'docLoader', false);
+    }
+
+    // ── Translator ──
+    function swapLanguages() {
+      const src = document.getElementById('sourceLanguage');
+      const tgt = document.getElementById('targetLanguage');
+      const tmp = src.value; src.value = tgt.value; tgt.value = tmp;
+    }
+
+    async function translateText() {
+      const text            = document.getElementById('translatorInput').value.trim();
+      const source_language = document.getElementById('sourceLanguage').value;
+      const target_language = document.getElementById('targetLanguage').value;
+      const result          = document.getElementById('translatorResult');
+      if (!text) { alert('Please enter text to translate'); return; }
+      setLoading('transBtnText', 'transLoader', true);
+      result.textContent = 'Translating…';
+      try {
+        const res  = await fetch('/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text, source_language, target_language}) });
+        const data = await res.json();
+        setResult(result, data.translation);
+      } catch { result.textContent = 'Translation failed. Please try again.'; }
+      setLoading('transBtnText', 'transLoader', false);
+    }
+
+    // ── Health ──
+    async function sendHealthMessage() {
+      const input    = document.getElementById('symptomsInput');
+      const symptoms = input.value.trim();
+      if (!symptoms) return;
+      const chat = document.getElementById('healthChat');
+
+      chat.innerHTML += `<div class="msg msg-user">${escapeHtml(symptoms)}</div>`;
+      input.value = '';
+      chat.scrollTop = chat.scrollHeight;
+
+      const typing = document.createElement('div');
+      typing.className = 'msg msg-bot'; typing.id = 'typing';
+      typing.textContent = '…';
+      chat.appendChild(typing);
+      chat.scrollTop = chat.scrollHeight;
+
+      try {
+        const res  = await fetch('/health', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({symptoms}) });
+        const data = await res.json();
+        typing.textContent = data.advice;
+      } catch {
+        typing.textContent = 'Something went wrong.';
+      }
+      typing.removeAttribute('id');
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+  </script>
 </body>
-
 </html>
