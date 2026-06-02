@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Email Rewriter AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f8ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Segoe UI, sans-serif;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(13, 110, 253, .15);
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #0d6efd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 28px;
+            margin: auto;
+        }
+
+        .heading {
+            color: #0d6efd;
+            font-weight: 700;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #d8e7ff;
+            border-radius: 15px;
+            padding: 14px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: none;
+            border-color: #0d6efd;
+        }
+
+        .btn-custom {
+            background: #0d6efd;
+            border: none;
+            border-radius: 15px;
+            padding: 14px;
+            font-weight: 600;
+        }
+
+        .btn-custom:hover {
+            background: #0b5ed7;
+        }
+
+        .output-box {
+            min-height: 220px;
+            border-radius: 20px;
+            background: #f8fbff;
+            border: 2px solid #d8e7ff;
+            padding: 20px;
+        }
+
+        .spinner-border {
+            display: none;
+        }
+
+        .result-text {
+            white-space: pre-wrap;
+        }
+
+        .user-message {
+            background: #fd7e14;
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            margin: 10px 0;
+            margin-left: 60px;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: #f1f1f1;
+            color: #212529;
+            padding: 12px;
+            border-radius: 15px;
+            margin: 10px 0;
+            margin-right: 60px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="main-card">
+            <div class="d-flex justify-content-center mb-4 gap-2">
+
+                <button id="emailTab" class="btn btn-primary" onclick="showEmail()">
+                    Email Rewriter
+                </button>
+
+                <button id="docTab" class="btn btn-outline-secondary" onclick="showDocument()">
+                    Document Summary
+                </button>
+                <button id="translatorTab" class="btn btn-outline-success" onclick="showTranslator()">
+                    Translator
+                </button>
+                <button id="healthTab" class="btn btn-outline-warning" onclick="showHealth()">
+
+                    Health Advisor
+
+                </button>
+            </div>
+            <div id="emailSection">
+                <div class="text-center mb-4">
+                    <div class="logo">
+                        ✉
+                    </div>
+
+                    <h2 class="heading mt-3">
+                        AI Email Rewriter
+                    </h2>
+
+                    <p class="text-muted">
+                        Transform your emails into any tone instantly
+                    </p>
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="fw-bold mb-2">
+                            Email Content
+                        </label>
+
+                        <textarea id="message" class="form-control" rows="10"
+                            placeholder="Type your email here..."></textarea>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="fw-bold mb-2">
+                            Select Tone
+                        </label>
+
+                        <select id="tone" class="form-select mb-3">
+                            <option>Formal</option>
+                            <option>Professional</option>
+                            <option>Friendly</option>
+                            <option>Informal</option>
+                            <option>Polite</option>
+                            <option>Corporate</option>
+                        </select>
+
+                        <button class="btn btn-primary btn-custom w-100" onclick="rewriteEmail()">
+                            Rewrite Email
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <div class="spinner-border text-primary" id="loader" role="status">
+                            </div>
+                        </div>
+
+                        <div class="output-box mt-4">
+
+                            <h5 class="text-primary mb-3">
+                                Rewritten Result
+                            </h5>
+
+                            <div id="result" class="result-text text-muted">
+                                Your rewritten email will appear here...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="documentSection" style="display:none;">
+
+                <div class="text-center mb-4">
+
+                    <div style="
+                width:70px;
+                height:70px;
+                border-radius:50%;
+                background:#212529;
+                color:white;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin:auto;
+                font-size:28px;">
+                        📄
+                    </div>
+
+                    <h2 class="mt-3 text-dark fw-bold">
+                        Document Summary
+                    </h2>
+
+                    <p class="text-muted">
+                        Upload PDF and generate AI summary
+                    </p>
+
+                </div>
+
+                <div class="p-4 rounded-4" style="
+            background:#1e1e1e;
+            color:white;">
+
+                    <label class="mb-2">
+                        Select PDF File
+                    </label>
+
+                    <input type="file" id="pdfFile" accept=".pdf" class="form-control mb-3">
+
+                    <button class="btn btn-light w-100" onclick="summarizeDocument()">
+                        Generate Summary
+                    </button>
+
+                    <div class="mt-4 p-3 rounded" style="
+                background:#2c2c2c;
+                min-height:220px;">
+
+                        <h5>
+                            Summary
+                        </h5>
+
+                        <div id="summaryResult">
+                            Your summary will appear here...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="translatorSection" style="display:none;">
+
+                <div class="text-center mb-4">
+
+                    <div style="
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:#198754;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:auto;
+            font-size:28px;">
+
+                        🌍
+
+                    </div>
+
+                    <h2 class="mt-3 fw-bold text-success">
+                        AI Translator
+                    </h2>
+
+                    <p class="text-muted">
+                        Translate between any languages instantly
+                    </p>
+
+                </div>
+
+                <div class="p-4 rounded-4 border">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label class="fw-bold mb-2">
+                                From
+                            </label>
+
+                            <select id="sourceLanguage" class="form-select">
+
+                                <option>English</option>
+                                <option>Hindi</option>
+                                <option>Gujarati</option>
+                                <option>French</option>
+                                <option>German</option>
+                                <option>Spanish</option>
+                                <option>Japanese</option>
+                                <option>Chinese</option>
+                                <option>Arabic</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="fw-bold mb-2">
+                                To
+                            </label>
+
+                            <select id="targetLanguage" class="form-select">
+
+                                <option>Hindi</option>
+                                <option>English</option>
+                                <option>Gujarati</option>
+                                <option>French</option>
+                                <option>German</option>
+                                <option>Spanish</option>
+                                <option>Japanese</option>
+                                <option>Chinese</option>
+                                <option>Arabic</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <textarea id="translatorInput" class="form-control mt-3" rows="8" placeholder="Enter text here...">
+        </textarea>
+
+                    <button class="btn btn-success w-100 mt-3" onclick="translateText()">
+
+                        Translate
+
+                    </button>
+
+                    <div class="output-box mt-4">
+
+                        <h5 class="text-success">
+                            Translation Result
+                        </h5>
+
+                        <div id="translatorResult">
+
+                            Translation will appear here...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="healthSection" style="display:none;">
+
+                <div class="text-center mb-4">
+
+                    <div style="
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:#fd7e14;
+            color:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:auto;
+            font-size:28px;">
+
+                        🩺
+
+                    </div>
+
+                    <h2 class="mt-3 fw-bold text-warning">
+                        AI Health Advisor
+                    </h2>
+
+                    <p class="text-muted">
+                        General wellness guidance with conversation memory
+                    </p>
+
+                </div>
+
+                <div style="
+            background:#fff8f0;
+            border:2px solid #fd7e14;
+            border-radius:20px;
+            padding:15px;">
+
+                    <div id="healthChatMessages" style="
+                height:450px;
+                overflow-y:auto;
+                background:white;
+                border-radius:15px;
+                padding:15px;">
+
+                        <div class="bot-message">
+                            Hello 👋 Describe your symptoms and I'll provide general health guidance.
+                        </div>
+
+                    </div>
+
+                    <div class="input-group mt-3">
+
+                        <input type="text" id="symptomsInput" class="form-control"
+                            placeholder="Describe your symptoms...">
+
+                        <button class="btn btn-warning" onclick="sendHealthMessage()">
+
+                            Send
+
+                        </button>
+
+                    </div>
+
+                    <div class="alert alert-warning mt-3 mb-0">
+                        This AI provides general health information only and does not diagnose medical conditions.
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showEmail() {
+
+            document.getElementById("emailSection").style.display = "block";
+            document.getElementById("documentSection").style.display = "none";
+            document.getElementById("healthSection").style.display = "none";
+
+            document.getElementById("emailTab")
+                .className = "btn btn-primary";
+
+            document.getElementById("docTab")
+                .className = "btn btn-outline-secondary";
+            document.getElementById("translatorSection").style.display =
+                "none";
+
+            document.getElementById("translatorTab").className =
+                "btn btn-outline-success";
+        }
+
+        function showDocument() {
+
+            document.getElementById("emailSection").style.display = "none";
+            document.getElementById("healthSection").style.display = "none";
+            document.getElementById("documentSection").style.display = "block";
+
+            document.getElementById("docTab")
+                .className = "btn btn-dark";
+
+            document.getElementById("emailTab")
+                .className = "btn btn-outline-primary";
+            document.getElementById("translatorSection").style.display =
+                "none";
+
+            document.getElementById("translatorTab").className =
+                "btn btn-outline-success";
+        }
+        function showTranslator() {
+
+            document.getElementById("emailSection").style.display =
+                "none";
+
+            document.getElementById("documentSection").style.display =
+                "none";
+            document.getElementById("healthSection").style.display = "none";
+
+            document.getElementById("translatorSection").style.display =
+                "block";
+
+            document.getElementById("emailTab").className =
+                "btn btn-outline-primary";
+
+            document.getElementById("docTab").className =
+                "btn btn-outline-secondary";
+
+            document.getElementById("translatorTab").className =
+                "btn btn-success";
+        }
+        function showHealth() {
+
+            document.getElementById("emailSection").style.display = "none";
+            document.getElementById("documentSection").style.display = "none";
+            document.getElementById("translatorSection").style.display = "none";
+
+            document.getElementById("healthSection").style.display = "block";
+
+            document.getElementById("emailTab").className =
+                "btn btn-outline-primary";
+
+            document.getElementById("docTab").className =
+                "btn btn-outline-secondary";
+
+            document.getElementById("translatorTab").className =
+                "btn btn-outline-success";
+
+            document.getElementById("healthTab").className =
+                "btn btn-warning";
+        }
+       
+        async function rewriteEmail() {
+
+            const message =
+                document.getElementById("message").value;
+
+            const tone =
+                document.getElementById("tone").value;
+
+            const resultBox =
+                document.getElementById("result");
+
+            const loader =
+                document.getElementById("loader");
+
+            if (!message) {
+                alert("Please enter email content");
+                return;
+            }
+
+            loader.style.display = "inline-block";
+
+            resultBox.innerHTML = "Generating...";
+
+            try {
+
+                const response =
+                    await fetch("/rewrite", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message,
+                            tone
+                        })
+
+                    });
+
+                const data =
+                    await response.json();
+
+                resultBox.innerHTML =
+                    data.response;
+
+            }
+            catch (error) {
+
+                resultBox.innerHTML =
+                    "Something went wrong.";
+
+                console.log(error);
+            }
+
+            loader.style.display = "none";
+        }
+
+        async function summarizeDocument() {
+
+            const file =
+                document.getElementById("pdfFile").files[0];
+
+            if (!file) {
+                alert("Please select a PDF");
+                return;
+            }
+
+            const formData =
+                new FormData();
+
+            formData.append("file", file);
+
+            const result =
+                document.getElementById("summaryResult");
+
+            result.innerHTML = "Generating Summary...";
+
+            try {
+
+                const response =
+                    await fetch("/summarize", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                const data =
+                    await response.json();
+
+                result.innerHTML =
+                    data.summary;
+
+            }
+            catch (error) {
+
+                result.innerHTML =
+                    "Something went wrong.";
+
+                console.log(error);
+            }
+        }
+
+        async function translateText() {
+
+            const text =
+                document.getElementById(
+                    "translatorInput"
+                ).value;
+
+            const source_language =
+                document.getElementById(
+                    "sourceLanguage"
+                ).value;
+
+            const target_language =
+                document.getElementById(
+                    "targetLanguage"
+                ).value;
+
+            const result =
+                document.getElementById(
+                    "translatorResult"
+                );
+
+            result.innerHTML =
+                "Translating...";
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/translate",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                text,
+                                source_language,
+                                target_language
+                            })
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                result.innerHTML =
+                    data.translation;
+
+            } catch (error) {
+
+                result.innerHTML =
+                    "Translation failed.";
+            }
+        }
+
+        async function sendHealthMessage() {
+
+            const input =
+                document.getElementById("symptomsInput");
+
+            const symptoms =
+                input.value.trim();
+
+            if (!symptoms) {
+                return;
+            }
+
+            const chat =
+                document.getElementById(
+                    "healthChatMessages"
+                );
+
+            chat.innerHTML += `
+        <div class="user-message">
+            ${symptoms}
+        </div>
+    `;
+
+            input.value = "";
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/health",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                symptoms
+                            })
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                chat.innerHTML += `
+            <div class="bot-message">
+                ${data.advice}
+            </div>
+        `;
+
+                chat.scrollTop =
+                    chat.scrollHeight;
+
+            }
+            catch (error) {
+
+                chat.innerHTML += `
+            <div class="bot-message">
+                Something went wrong.
+            </div>
+        `;
+
+                console.log(error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
