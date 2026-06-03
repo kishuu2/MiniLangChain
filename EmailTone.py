@@ -6,9 +6,11 @@ from DocumentSummary import generate_summary
 from Translator import translate_text
 from HealthAdvice import health_advice
 import os
+from flask_cors import CORS
 from dotenv import load_dotenv
-app = Flask(__name__)
 
+app = Flask(__name__)
+CORS(app)
 import os
 
 load_dotenv()
