@@ -1,20 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>AI Tools Suite</title>
+
+  <meta name="title" content="AI Tools Suite | LangChain Powered AI Assistant" />
+  <meta name="description"
+    content="A modern AI-powered toolkit featuring Email Rewriter, PDF Summarizer, Multi-Language Translator and Health Advisor built with LangChain, Groq and Flask." />
+
+  <meta name="keywords"
+    content="AI Tools, LangChain, Groq, Email Rewriter, PDF Summarizer, Translator, AI Health Advisor, Flask AI, Artificial Intelligence" />
+
+  <meta name="author" content="Kishan Chokwala" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0d6efd" />
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AI Tools Suite" />
+  <meta property="og:description"
+    content="Rewrite emails, summarize PDFs, translate languages and get AI-powered assistance instantly." />
+
+  <meta property="og:image" content="preview.png" />
+
+  <meta property="og:url" content="https://mini-lang-chain.vercel.app/" />
+
+  <meta property="og:site_name" content="AI Tools Suite" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <meta name="twitter:title" content="AI Tools Suite" />
+
+  <meta name="twitter:description"
+    content="AI-powered Email Rewriter, PDF Summarizer, Translator and Health Advisor." />
+
+  <meta name="twitter:image" content="https://your-domain.com/preview.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --bg: #202020;
       --surface: #14171f;
       --surface2: #1a1e28;
-      --border: rgba(255,255,255,0.07);
+      --border: rgba(255, 255, 255, 0.07);
       --text: #f0f2f7;
       --muted: #7a7f8e;
       --accent-email: #4f8cff;
@@ -44,8 +88,9 @@
       margin-bottom: 32px;
       animation: fadeDown .5s ease both;
     }
+
     .app-header h1 {
-      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       font-size: clamp(1.6rem, 5vw, 2.4rem);
       font-weight: 800;
       letter-spacing: -0.5px;
@@ -54,6 +99,7 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+
     .app-header p {
       color: var(--muted);
       font-size: 0.9rem;
@@ -75,7 +121,10 @@
       width: 100%;
       animation: fadeDown .5s .1s ease both;
     }
-    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab-nav::-webkit-scrollbar {
+      display: none;
+    }
 
     .tab-btn {
       display: flex;
@@ -94,16 +143,36 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .tab-btn .tab-icon { font-size: 1rem; }
-    .tab-btn:hover { color: var(--text); background: var(--surface2); }
+
+    .tab-btn .tab-icon {
+      font-size: 1rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: var(--surface2);
+    }
+
     .tab-btn.active {
       color: #0d0f14;
       background: var(--tab-color, var(--accent-email));
     }
-    #emailTab.active   { --tab-color: var(--accent-email); }
-    #docTab.active     { --tab-color: var(--accent-doc); }
-    #transTab.active   { --tab-color: var(--accent-trans); }
-    #healthTab.active  { --tab-color: var(--accent-health); }
+
+    #emailTab.active {
+      --tab-color: var(--accent-email);
+    }
+
+    #docTab.active {
+      --tab-color: var(--accent-doc);
+    }
+
+    #transTab.active {
+      --tab-color: var(--accent-trans);
+    }
+
+    #healthTab.active {
+      --tab-color: var(--accent-health);
+    }
 
     /* ── Card ── */
     .card {
@@ -116,8 +185,29 @@
       animation: fadeUp .35s ease both;
     }
 
-    @keyframes fadeDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:none; } }
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(14px);  } to { opacity:1; transform:none; } }
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
     /* ── Section Header ── */
     .section-head {
@@ -126,24 +216,45 @@
       gap: 14px;
       margin-bottom: 24px;
     }
+
     .section-icon {
-      width: 48px; height: 48px;
+      width: 48px;
+      height: 48px;
       border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.5rem;
       flex-shrink: 0;
     }
-    .icon-email  { background: rgba(79,140,255,.15); }
-    .icon-doc    { background: rgba(167,139,250,.15); }
-    .icon-trans  { background: rgba(52,211,153,.15);  }
-    .icon-health { background: rgba(251,146,60,.15);  }
+
+    .icon-email {
+      background: rgba(79, 140, 255, .15);
+    }
+
+    .icon-doc {
+      background: rgba(167, 139, 250, .15);
+    }
+
+    .icon-trans {
+      background: rgba(52, 211, 153, .15);
+    }
+
+    .icon-health {
+      background: rgba(251, 146, 60, .15);
+    }
 
     .section-head h2 {
       font-family: 'Syne', sans-serif;
       font-size: 1.25rem;
       font-weight: 700;
     }
-    .section-head p { color: var(--muted); font-size: 0.83rem; margin-top: 2px; }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 0.83rem;
+      margin-top: 2px;
+    }
 
     /* ── Form Elements ── */
     label {
@@ -156,7 +267,10 @@
       margin-bottom: 8px;
     }
 
-    textarea, input[type="text"], select, input[type="file"] {
+    textarea,
+    input[type="text"],
+    select,
+    input[type="file"] {
       width: 100%;
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -170,15 +284,33 @@
       resize: none;
       appearance: none;
     }
-    textarea:focus, input[type="text"]:focus, select:focus {
+
+    textarea:focus,
+    input[type="text"]:focus,
+    select:focus {
       border-color: var(--focus-color, var(--accent-email));
     }
-    select option { background: var(--surface2); }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+    select option {
+      background: var(--surface2);
+    }
 
-    .field { display: flex; flex-direction: column; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
 
     /* ── Buttons ── */
     .btn-primary {
@@ -196,12 +328,35 @@
       gap: 8px;
       letter-spacing: .3px;
     }
-    .btn-email  { background: var(--accent-email);  color: #fff; }
-    .btn-doc    { background: var(--accent-doc);    color: #fff; }
-    .btn-trans  { background: var(--accent-trans);  color: #0d0f14; }
-    .btn-health { background: var(--accent-health); color: #fff; }
-    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-primary:active { transform: translateY(0); }
+
+    .btn-email {
+      background: var(--accent-email);
+      color: #fff;
+    }
+
+    .btn-doc {
+      background: var(--accent-doc);
+      color: #fff;
+    }
+
+    .btn-trans {
+      background: var(--accent-trans);
+      color: #0d0f14;
+    }
+
+    .btn-health {
+      background: var(--accent-health);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
 
     /* ── Output Box ── */
     .output-box {
@@ -211,6 +366,7 @@
       padding: 18px;
       min-height: 160px;
     }
+
     .output-label {
       font-size: 0.72rem;
       font-weight: 600;
@@ -219,31 +375,43 @@
       color: var(--muted);
       margin-bottom: 10px;
     }
+
     .output-text {
       font-size: 0.9rem;
       line-height: 1.65;
       color: var(--muted);
       white-space: pre-wrap;
     }
-    .output-text.has-content { color: var(--text); }
+
+    .output-text.has-content {
+      color: var(--text);
+    }
 
     /* ── Loader ── */
     .loader {
       display: none;
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,.2);
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, .2);
       border-top-color: #fff;
       border-radius: 50%;
       animation: spin .6s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* ── Email Section ── */
-    #emailSection .two-col { align-items: start; }
+    #emailSection .two-col {
+      align-items: start;
+    }
 
     /* ── Doc Section ── */
     .doc-upload-area {
-      border: 2px dashed rgba(167,139,250,.3);
+      border: 2px dashed rgba(167, 139, 250, .3);
       border-radius: var(--radius-sm);
       padding: 32px 20px;
       text-align: center;
@@ -251,11 +419,35 @@
       transition: border-color .2s, background .2s;
       position: relative;
     }
-    .doc-upload-area:hover { border-color: var(--accent-doc); background: rgba(167,139,250,.04); }
-    .doc-upload-area input { position: absolute; inset:0; opacity:0; cursor:pointer; }
-    .doc-upload-area p { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
-    .doc-upload-area .upload-icon { font-size: 2rem; }
-    #fileNameDisplay { font-size: 0.8rem; color: var(--accent-doc); margin-top: 6px; min-height: 18px; }
+
+    .doc-upload-area:hover {
+      border-color: var(--accent-doc);
+      background: rgba(167, 139, 250, .04);
+    }
+
+    .doc-upload-area input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .doc-upload-area p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+
+    .doc-upload-area .upload-icon {
+      font-size: 2rem;
+    }
+
+    #fileNameDisplay {
+      font-size: 0.8rem;
+      color: var(--accent-doc);
+      margin-top: 6px;
+      min-height: 18px;
+    }
 
     /* ── Health Chat ── */
     .chat-area {
@@ -270,11 +462,30 @@
       gap: 10px;
       scroll-behavior: smooth;
     }
-    .chat-area::-webkit-scrollbar { width: 4px; }
-    .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    .msg { max-width: 80%; padding: 11px 15px; border-radius: 14px; font-size: 0.88rem; line-height: 1.5; }
-    .msg-bot { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; }
+    .chat-area::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat-area::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 11px 15px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .msg-bot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+    }
+
     .msg-user {
       background: var(--accent-health);
       color: #fff;
@@ -287,7 +498,12 @@
       gap: 10px;
       margin-top: 14px;
     }
-    .chat-input-row input { border-radius: var(--radius-sm); flex: 1; }
+
+    .chat-input-row input {
+      border-radius: var(--radius-sm);
+      flex: 1;
+    }
+
     .chat-send-btn {
       padding: 12px 20px;
       border: none;
@@ -301,14 +517,17 @@
       transition: all .2s;
       white-space: nowrap;
     }
-    .chat-send-btn:hover { opacity: .85; }
+
+    .chat-send-btn:hover {
+      opacity: .85;
+    }
 
     .disclaimer {
       margin-top: 12px;
       padding: 10px 14px;
       border-radius: 10px;
-      background: rgba(251,146,60,.08);
-      border: 1px solid rgba(251,146,60,.2);
+      background: rgba(251, 146, 60, .08);
+      border: 1px solid rgba(251, 146, 60, .2);
       font-size: 0.78rem;
       color: var(--accent-health);
     }
@@ -319,7 +538,11 @@
       align-items: flex-end;
       gap: 10px;
     }
-    .lang-swap-row .field { flex: 1; }
+
+    .lang-swap-row .field {
+      flex: 1;
+    }
+
     .swap-btn {
       padding: 12px;
       border: 1px solid var(--border);
@@ -335,16 +558,35 @@
       align-items: center;
       justify-content: center;
     }
-    .swap-btn:hover { color: var(--accent-trans); border-color: var(--accent-trans); }
+
+    .swap-btn:hover {
+      color: var(--accent-trans);
+      border-color: var(--accent-trans);
+    }
 
     /* ── Utility ── */
-    .mt12 { margin-top: 12px; }
-    .mt16 { margin-top: 16px; }
-    .mt20 { margin-top: 20px; }
-    .section { display: none; }
-    .section.active { display: block; }
+    .mt12 {
+      margin-top: 12px;
+    }
+
+    .mt16 {
+      margin-top: 16px;
+    }
+
+    .mt20 {
+      margin-top: 20px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
   </style>
 </head>
+
 <body>
 
   <header class="app-header">
@@ -452,25 +694,38 @@
       <div class="field">
         <label>From</label>
         <select id="sourceLanguage" style="--focus-color:var(--accent-trans)">
-          <option>English</option><option>Hindi</option><option>Gujarati</option>
-          <option>French</option><option>German</option><option>Spanish</option>
-          <option>Japanese</option><option>Chinese</option><option>Arabic</option>
+          <option>English</option>
+          <option>Hindi</option>
+          <option>Gujarati</option>
+          <option>French</option>
+          <option>German</option>
+          <option>Spanish</option>
+          <option>Japanese</option>
+          <option>Chinese</option>
+          <option>Arabic</option>
         </select>
       </div>
       <button class="swap-btn" onclick="swapLanguages()" title="Swap languages">⇄</button>
       <div class="field">
         <label>To</label>
         <select id="targetLanguage" style="--focus-color:var(--accent-trans)">
-          <option>Hindi</option><option>English</option><option>Gujarati</option>
-          <option>French</option><option>German</option><option>Spanish</option>
-          <option>Japanese</option><option>Chinese</option><option>Arabic</option>
+          <option>Hindi</option>
+          <option>English</option>
+          <option>Gujarati</option>
+          <option>French</option>
+          <option>German</option>
+          <option>Spanish</option>
+          <option>Japanese</option>
+          <option>Chinese</option>
+          <option>Arabic</option>
         </select>
       </div>
     </div>
 
     <div class="field mt16">
       <label>Text to Translate</label>
-      <textarea id="translatorInput" rows="7" placeholder="Enter text here…" style="--focus-color:var(--accent-trans)"></textarea>
+      <textarea id="translatorInput" rows="7" placeholder="Enter text here…"
+        style="--focus-color:var(--accent-trans)"></textarea>
     </div>
 
     <button class="btn-primary btn-trans mt16" onclick="translateText()" style="width:100%">
@@ -500,13 +755,13 @@
 
     <div class="chat-input-row">
       <input type="text" id="symptomsInput" placeholder="Describe your symptoms…"
-        onkeydown="if(event.key==='Enter') sendHealthMessage()"
-        style="--focus-color:var(--accent-health)" />
+        onkeydown="if(event.key==='Enter') sendHealthMessage()" style="--focus-color:var(--accent-health)" />
       <button class="chat-send-btn" onclick="sendHealthMessage()">Send</button>
     </div>
 
     <div class="disclaimer">
-      ⚠️ This AI provides general health information only and does not diagnose medical conditions. Always consult a qualified doctor.
+      ⚠️ This AI provides general health information only and does not diagnose medical conditions. Always consult a
+      qualified doctor.
     </div>
   </div>
 
@@ -525,7 +780,7 @@
     // ── Loader helpers ──
     function setLoading(btnTextId, loaderId, loading) {
       document.getElementById(btnTextId).style.display = loading ? 'none' : '';
-      document.getElementById(loaderId).style.display  = loading ? 'inline-block' : 'none';
+      document.getElementById(loaderId).style.display = loading ? 'inline-block' : 'none';
     }
 
     function setResult(el, text) {
@@ -536,13 +791,13 @@
     // ── Email ──
     async function rewriteEmail() {
       const message = document.getElementById('message').value.trim();
-      const tone    = document.getElementById('tone').value;
-      const result  = document.getElementById('emailResult');
+      const tone = document.getElementById('tone').value;
+      const result = document.getElementById('emailResult');
       if (!message) { alert('Please enter email content'); return; }
       setLoading('emailBtnText', 'emailLoader', true);
       result.textContent = 'Rewriting…';
       try {
-        const res  = await fetch('https://minilangchain.onrender.com/rewrite', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message,tone}) });
+        const res = await fetch('https://minilangchain.onrender.com/rewrite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, tone }) });
         const data = await res.json();
         setResult(result, data.response);
       } catch { result.textContent = 'Something went wrong. Please try again.'; }
@@ -564,7 +819,7 @@
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const res  = await fetch('https://minilangchain.onrender.com/summarize', { method:'POST', body:formData });
+        const res = await fetch('https://minilangchain.onrender.com/summarize', { method: 'POST', body: formData });
         const data = await res.json();
         setResult(result, data.summary);
       } catch { result.textContent = 'Something went wrong. Please try again.'; }
@@ -579,15 +834,15 @@
     }
 
     async function translateText() {
-      const text            = document.getElementById('translatorInput').value.trim();
+      const text = document.getElementById('translatorInput').value.trim();
       const source_language = document.getElementById('sourceLanguage').value;
       const target_language = document.getElementById('targetLanguage').value;
-      const result          = document.getElementById('translatorResult');
+      const result = document.getElementById('translatorResult');
       if (!text) { alert('Please enter text to translate'); return; }
       setLoading('transBtnText', 'transLoader', true);
       result.textContent = 'Translating…';
       try {
-        const res  = await fetch('https://minilangchain.onrender.com/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text, source_language, target_language}) });
+        const res = await fetch('https://minilangchain.onrender.com/translate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, source_language, target_language }) });
         const data = await res.json();
         setResult(result, data.translation);
       } catch { result.textContent = 'Translation failed. Please try again.'; }
@@ -596,7 +851,7 @@
 
     // ── Health ──
     async function sendHealthMessage() {
-      const input    = document.getElementById('symptomsInput');
+      const input = document.getElementById('symptomsInput');
       const symptoms = input.value.trim();
       if (!symptoms) return;
       const chat = document.getElementById('healthChat');
@@ -612,7 +867,7 @@
       chat.scrollTop = chat.scrollHeight;
 
       try {
-        const res  = await fetch('https://minilangchain.onrender.com/health', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({symptoms}) });
+        const res = await fetch('https://minilangchain.onrender.com/health', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ symptoms }) });
         const data = await res.json();
         typing.textContent = data.advice;
       } catch {
@@ -623,8 +878,9 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
   </script>
 </body>
+
 </html>
