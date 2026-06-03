@@ -371,7 +371,7 @@
   <!-- ══ EMAIL ══ -->
   <div class="card section active" id="emailSection">
     <div class="section-head">
-      <div class="section-icon icon-email"><img src="{{url_for('static', filename='email.webp')}}" alt="email" width="50px"></div>
+      <div class="section-icon icon-email"><img src="./static/email.webp" alt="email" width="50px"></div>
       <div>
         <h2 style="color:var(--accent-email)">Email Rewriter</h2>
         <p>Transform any email into the perfect tone instantly</p>
@@ -413,7 +413,7 @@
   <!-- ══ DOCUMENT ══ -->
   <div class="card section" id="docSection">
     <div class="section-head">
-      <div class="section-icon icon-doc"><img src="{{url_for('static', filename='document.webp')}}" alt="document" width="50px"></div>
+      <div class="section-icon icon-doc"><img src="./static/document.webp" alt="document" width="50px"></div>
       <div>
         <h2 style="color:var(--accent-doc)">Document Summary</h2>
         <p>Upload a PDF and get a concise AI-powered summary</p>
@@ -441,7 +441,7 @@
   <!-- ══ TRANSLATOR ══ -->
   <div class="card section" id="transSection">
     <div class="section-head">
-      <div class="section-icon icon-trans"><img src="{{url_for('static', filename='translation.webp')}}" alt="translator" width="50px"></div>
+      <div class="section-icon icon-trans"><img src="./static/translation.webp" alt="translator" width="50px"></div>
       <div>
         <h2 style="color:var(--accent-trans)">AI Translator</h2>
         <p>Translate between any languages instantly</p>
@@ -487,7 +487,7 @@
   <!-- ══ HEALTH ══ -->
   <div class="card section" id="healthSection">
     <div class="section-head">
-      <div class="section-icon icon-health"><img src="{{url_for('static', filename='heartbeat.webp')}}" alt="health" width="50px"></div>
+      <div class="section-icon icon-health"><img src="./static/heartbeat.webp" alt="health" width="50px"></div>
       <div>
         <h2 style="color:var(--accent-health)">Health Advisor</h2>
         <p>General wellness guidance — not a substitute for a doctor</p>
@@ -542,7 +542,7 @@
       setLoading('emailBtnText', 'emailLoader', true);
       result.textContent = 'Rewriting…';
       try {
-        const res  = await fetch('/rewrite', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message,tone}) });
+        const res  = await fetch('https://minilangchain.onrender.com/rewrite', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message,tone}) });
         const data = await res.json();
         setResult(result, data.response);
       } catch { result.textContent = 'Something went wrong. Please try again.'; }
@@ -564,7 +564,7 @@
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const res  = await fetch('/summarize', { method:'POST', body:formData });
+        const res  = await fetch('https://minilangchain.onrender.com/summarize', { method:'POST', body:formData });
         const data = await res.json();
         setResult(result, data.summary);
       } catch { result.textContent = 'Something went wrong. Please try again.'; }
@@ -587,7 +587,7 @@
       setLoading('transBtnText', 'transLoader', true);
       result.textContent = 'Translating…';
       try {
-        const res  = await fetch('/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text, source_language, target_language}) });
+        const res  = await fetch('https://minilangchain.onrender.com/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text, source_language, target_language}) });
         const data = await res.json();
         setResult(result, data.translation);
       } catch { result.textContent = 'Translation failed. Please try again.'; }
@@ -612,7 +612,7 @@
       chat.scrollTop = chat.scrollHeight;
 
       try {
-        const res  = await fetch('/health', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({symptoms}) });
+        const res  = await fetch('https://minilangchain.onrender.com/health', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({symptoms}) });
         const data = await res.json();
         typing.textContent = data.advice;
       } catch {
