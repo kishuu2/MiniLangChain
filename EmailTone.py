@@ -11,11 +11,15 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
-import os
 
 load_dotenv()
+api_key = os.getenv("GROQ_API_KEY")
+if not api_key:
+    raise RuntimeError("GROQ_API_KEY is not configured")
+
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile"
+    model="llama-3.3-70b-versatile",
+    api_key=api_key
 )
 
 prompt = PromptTemplate.from_template(
@@ -39,15 +43,21 @@ def home():
 @app.route("/rewrite", methods=["POST"])
 def rewrite():
 
-    data = request.json
+    data = request.get_json(silent=True) or {}
 
     email_text = data.get("message")
     tone = data.get("tone")
+    if not email_text or not tone:
+        return jsonify({"error": "message and tone are required"}), 400
 
-    result = chain.invoke({
-        "input": email_text,
-        "tone": tone
-    })
+    try:
+        result = chain.invoke({
+            "input": email_text,
+            "tone": tone
+        })
+    except Exception as error:
+        app.logger.exception("Email rewrite failed")
+        return jsonify({"error": str(error)}), 502
 
     return jsonify({
         "response": result.content
@@ -55,12 +65,17 @@ def rewrite():
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
-    file = request.files['file']
+    file = request.files.get('file')
+    if not file or not file.filename:
+        return jsonify({"error": "A PDF file is required"}), 400
     file_path = "temp.pdf"
 
-    file.save(file_path)
-
-    summary = generate_summary(file_path)
+    try:
+        file.save(file_path)
+        summary = generate_summary(file_path)
+    except Exception as error:
+        app.logger.exception("Document summarization failed")
+        return jsonify({"error": str(error)}), 502
     return jsonify({
         "summary": summary
     })
@@ -68,17 +83,23 @@ def summarize():
 @app.route("/translate", methods=["POST"])
 def translate():
 
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
 
     text = data.get("text")
     source_language = data.get("source_language")
     target_language = data.get("target_language")
+    if not text or not source_language or not target_language:
+        return jsonify({"error": "text, source_language and target_language are required"}), 400
 
-    translated = translate_text(
-        text,
-        source_language,
-        target_language
-    )
+    try:
+        translated = translate_text(
+            text,
+            source_language,
+            target_language
+        )
+    except Exception as error:
+        app.logger.exception("Translation failed")
+        return jsonify({"error": str(error)}), 502
 
     return jsonify({
         "translation": translated
@@ -87,11 +108,17 @@ def translate():
 @app.route("/health", methods=["POST"])
 def health():
 
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
 
     symptoms = data.get("symptoms")
+    if not symptoms:
+        return jsonify({"error": "symptoms are required"}), 400
 
-    response = health_advice(symptoms)
+    try:
+        response = health_advice(symptoms)
+    except Exception as error:
+        app.logger.exception("Health advice request failed")
+        return jsonify({"error": str(error)}), 502
 
     return jsonify({
         "advice": response

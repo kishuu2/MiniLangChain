@@ -784,8 +784,15 @@
     }
 
     function setResult(el, text) {
-      el.textContent = text;
+      el.textContent = text || 'No response received.';
       el.classList.toggle('has-content', true);
+    }
+
+    async function requestJson(url, options) {
+      const res = await fetch(url, options);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+      return data;
     }
 
     // ── Email ──
@@ -797,10 +804,9 @@
       setLoading('emailBtnText', 'emailLoader', true);
       result.textContent = 'Rewriting…';
       try {
-        const res = await fetch('https://minilangchain.onrender.com/rewrite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, tone }) });
-        const data = await res.json();
+        const data = await requestJson('https://minilangchain.onrender.com/rewrite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, tone }) });
         setResult(result, data.response);
-      } catch { result.textContent = 'Something went wrong. Please try again.'; }
+      } catch (error) { result.textContent = error.message; }
       setLoading('emailBtnText', 'emailLoader', false);
     }
 
@@ -819,10 +825,9 @@
       const formData = new FormData();
       formData.append('file', file);
       try {
-        const res = await fetch('https://minilangchain.onrender.com/summarize', { method: 'POST', body: formData });
-        const data = await res.json();
+        const data = await requestJson('https://minilangchain.onrender.com/summarize', { method: 'POST', body: formData });
         setResult(result, data.summary);
-      } catch { result.textContent = 'Something went wrong. Please try again.'; }
+      } catch (error) { result.textContent = error.message; }
       setLoading('docBtnText', 'docLoader', false);
     }
 
@@ -842,10 +847,9 @@
       setLoading('transBtnText', 'transLoader', true);
       result.textContent = 'Translating…';
       try {
-        const res = await fetch('https://minilangchain.onrender.com/translate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, source_language, target_language }) });
-        const data = await res.json();
+        const data = await requestJson('https://minilangchain.onrender.com/translate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, source_language, target_language }) });
         setResult(result, data.translation);
-      } catch { result.textContent = 'Translation failed. Please try again.'; }
+      } catch (error) { result.textContent = error.message; }
       setLoading('transBtnText', 'transLoader', false);
     }
 
@@ -867,11 +871,10 @@
       chat.scrollTop = chat.scrollHeight;
 
       try {
-        const res = await fetch('https://minilangchain.onrender.com/health', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ symptoms }) });
-        const data = await res.json();
+        const data = await requestJson('https://minilangchain.onrender.com/health', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ symptoms }) });
         typing.textContent = data.advice;
-      } catch {
-        typing.textContent = 'Something went wrong.';
+      } catch (error) {
+        typing.textContent = error.message;
       }
       typing.removeAttribute('id');
       chat.scrollTop = chat.scrollHeight;
