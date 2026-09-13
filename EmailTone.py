@@ -18,7 +18,7 @@ if not api_key:
     raise RuntimeError("GROQ_API_KEY is not configured")
 
 llm = ChatGroq(
-    model=os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
+    model="llama-3.1-8b-instant",
     api_key=api_key
 )
 
