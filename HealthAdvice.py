@@ -7,7 +7,7 @@ load_dotenv()
 
 memory = ConversationBufferMemory()
 
-llm = ChatGroq(model="llama-3.3-70b-versatile", max_tokens=100)
+llm = ChatGroq(model=os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), max_tokens=100)
 prompt = PromptTemplate.from_template("give the answer in short, maximum 2 or 3 sentences and you are an expert in health advice: {symptoms}. Do not diagnose. Provide general health tips only. Suggest consulting a doctor.")
 
 chain = prompt | llm

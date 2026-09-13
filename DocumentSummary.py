@@ -16,7 +16,7 @@ def generate_summary(pdf_path):
         "Summarize the following document:\n{document}"
     )
 
-    llm = ChatGroq(model="llama-3.3-70b-versatile")
+    llm = ChatGroq(model=os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"))
 
     chain = prompt | llm
 
