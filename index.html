@@ -788,7 +788,7 @@
       el.classList.toggle('has-content', true);
     }
 
-    async function requestJson(url, options, retries = 1) {
+    async function requestJson(url, options, retries = 3) {
       try {
         const res = await fetch(url, options);
         const data = await res.json().catch(() => ({}));
@@ -796,7 +796,8 @@
         return data;
       } catch (error) {
         if (retries > 0 && error instanceof TypeError) {
-          await new Promise(resolve => setTimeout(resolve, 1200));
+          const retryNumber = 4 - retries;
+          await new Promise(resolve => setTimeout(resolve, retryNumber * 4000));
           return requestJson(url, options, retries - 1);
         }
         if (error instanceof TypeError) {
