@@ -7,7 +7,11 @@ load_dotenv()
 
 memory = ConversationBufferMemory()
 
-llm = ChatGroq(model="openai/gpt-oss-20b", max_tokens=512)
+llm = ChatGroq(
+    model="openai/gpt-oss-20b",
+    max_tokens=512,
+    reasoning_effort="low"
+)
 prompt = PromptTemplate.from_template("""
 You are a cautious health information assistant. Give a helpful answer in 2 or 3
 sentences. Do not diagnose or prescribe medicine. Provide general health tips and
