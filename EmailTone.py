@@ -18,7 +18,7 @@ if not api_key:
     raise RuntimeError("GROQ_API_KEY is not configured")
 
 llm = ChatGroq(
-    model="llama-3.1-8b-instant",
+    model="openai/gpt-oss-20b",
     api_key=api_key
 )
 
