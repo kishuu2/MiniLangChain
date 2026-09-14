@@ -788,11 +788,22 @@
       el.classList.toggle('has-content', true);
     }
 
-    async function requestJson(url, options) {
-      const res = await fetch(url, options);
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-      return data;
+    async function requestJson(url, options, retries = 1) {
+      try {
+        const res = await fetch(url, options);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+        return data;
+      } catch (error) {
+        if (retries > 0 && error instanceof TypeError) {
+          await new Promise(resolve => setTimeout(resolve, 1200));
+          return requestJson(url, options, retries - 1);
+        }
+        if (error instanceof TypeError) {
+          throw new Error('Backend is waking up or unavailable. Please try again.');
+        }
+        throw error;
+      }
     }
 
     // ── Email ──
@@ -872,7 +883,7 @@
 
       try {
         const data = await requestJson('https://minilangchain.onrender.com/health', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ symptoms }) });
-        typing.textContent = data.advice;
+        typing.textContent = data.advice || 'No health advice was returned. Please try again.';
       } catch (error) {
         typing.textContent = error.message;
       }
